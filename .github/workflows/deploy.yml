@@ -9,18 +9,22 @@ jobs:
       - name: Build image
         run: |
           docker build -t myapp:latest .
+      - name: Sign in to Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{secrets.AZURE_CREDENTIALS}}
       - name: Push to ACR
         run: |
-          az login --service-principal -u ${{ secrets.AZURE_USER }} -p ${{ secrets.AZURE_PASS }} --tenant ${{ secrets.AZURE_TENANT }}
-          az acr login -n sslablabacr
-          docker tag myapp:latest sslablabacr.azurecr.io/myapp:latest
-          docker push sslablabacr.azurecr.io/myapp:latest
+         
+          az acr login -n sslablabacrvrt1
+          docker tag myapp:latest sslablabacrvrt1.azurecr.io/myapp:latest
+          docker push sslablabacrvrt1.azurecr.io/myapp:latest
       - name: Deploy to WebApp
         run: |
           az webapp config container set \
           -g ss-lab-rg \
           -n sslab-webapp \
-          --container-image-name sslablabacr.azurecr.io/myapp:latest \
-          --container-registry-url https://sslablabacr.azurecr.io \
-          --container-registry-user <USERNAME> \
-          --container-registry-password <PASSWORD>
+          --container-image-name sslablabacrvrt1.azurecr.io/myapp:latest \
+          --container-registry-url https://sslablabacrvrt1.azurecr.io \
+          --container-registry-user ${{secrets.ACR_USER}} \
+          --container-registry-password ${{secrets.ACR_PWD}}
