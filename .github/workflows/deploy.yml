@@ -1,10 +1,12 @@
 name: Build and Deploy
 on: 
   workflow_dispatch
-jobs:
-  permissions:
+
+permissions:
     contents: read
     security-events: write
+jobs:
+
   build-deploy:
     runs-on: ubuntu-latest
     steps:
@@ -13,7 +15,6 @@ jobs:
         uses: github/codeql-action/init@v3
         with:
           languages: javascript
-      
       - name: Perform CodeQL analysis
         uses: github/codeql-action/analyze@v3
       - name: Build image
@@ -25,7 +26,6 @@ jobs:
           creds: ${{secrets.AZURE_CREDENTIALS}}
       - name: Push to ACR
         run: |
-         
           az acr login -n sslablabacrvrt1
           docker tag myapp:latest sslablabacrvrt1.azurecr.io/myapp:latest
           docker push sslablabacrvrt1.azurecr.io/myapp:latest
