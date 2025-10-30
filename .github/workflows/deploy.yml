@@ -23,7 +23,7 @@ jobs:
         run: |
           az webapp config container set \
           -g ss-lab-rg \
-          -n sslab-webapp \
+          -n sslab-webappvrt1 \
           --container-image-name sslablabacrvrt1.azurecr.io/myapp:latest \
           --container-registry-url https://sslablabacrvrt1.azurecr.io \
           --container-registry-user ${{secrets.ACR_USER}} \
